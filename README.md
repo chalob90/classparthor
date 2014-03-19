@@ -1,0 +1,1 @@
+This repository contains the source codes for ClassPartHor, an app created for the Interaction Design and Prototyping (G2) class.
