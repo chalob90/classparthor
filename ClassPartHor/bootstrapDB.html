@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+    <script src="common.js"></script>    
+  </head>
+  
+  <body>
+    <button id="boostrap" onclick="initializeStudents()">Re-initialize Student Table!</button>
+    **Warning** Will reset student table!
+    
+    
+    <script>    
+      function initializeStudents() {        
+        var isConfirm = confirm("Are you sure?");
+        
+        if (isConfirm == true) {
+          var users = ["adam_chee_2012", "ian_chan_2011", "alvin_soh_2011", "geoffreygoh_2011", "vivian_lai_2011"];
+          var preferredNames = ["Adam", "Ian", "Alvin", "Geoffrey", "Vivian"];
+          var photos = [
+            "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-frc1/t1.0-1/c170.50.621.621/s160x160/228451_10151174652921468_1320028396_n.jpg",
+            "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c27.0.160.160/p160x160/575147_10150860075397024_692688903_n.jpg",
+            "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-frc3/t1/c33.33.414.414/s160x160/190242_10151256881195126_1727415074_n.jpg",
+            "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.56.160.160/p160x160/1535725_10152221710152228_474467658_n.jpg",
+            "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/t1/p160x160/1505262_10152178022021145_2027794367_n.jpg"
+          ];
+          var seatNumbers = [1,2,3,4,5];
+          var newStudentObj = {};
+         
+          for (var i = 0; i < users.length; i++) {
+            newStudentObj[users[i]] = {
+              preferredName : preferredNames[i],
+              seatNumber : seatNumbers[i],
+              photo: photos[i],
+              semesterCount : 0,
+              todayCount : 0,
+              semesterScore : 0,
+              todayScore : 0
+            };  
+          }              
+           studentRef.set(newStudentObj);   
+        }            
+      }
+    </script>
+    
+  </body>
+</html>

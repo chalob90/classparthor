@@ -1,0 +1,100 @@
+<!DOCTYPE html>  
+<html>  
+  <head> 
+	<meta charset-"utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Select Your Session</title>
+	<!-- Bootstrap core CSS 
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet"/>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+    <script src="common.js"></script>
+  </head>
+  <body>
+    
+    <div id="backgroundbox">
+    </div>
+    
+    <script>
+      var className = GetParam.class;
+       // Get Class and Display Accordingly
+      var className = GetParam.class;
+      if (className === "aa") {
+        className = "IS303 - Architectual Analysis";
+      } else if (className === "ews") {
+        className = "IS305 - Enterprise Web Solutions";
+      } else if (className ==="idp"){
+        className = "IS306 - Interaction Design and Prototyping"
+      } else {
+        className = "IS480 - Final Year Project"
+      }
+    </script>
+	<div class="container">
+		<!-- Logout button start here -->
+    <a class="btn btn-default btn-sm pull-left" id="selectclassbtn" href="selectclass.html"><i class="fa fa-undo"></i> Back to Select Class</a>  
+    <script>$('#selectclassbtn').prop('href', 'selectclass.html?user=' + GetParam.user);</script>
+    <a class="btn btn-default btn-sm pull-right" href="login.html"><i class="fa fa-sign-in"></i> Logout</a>
+    <br />
+    <br />
+		<!-- Logout button end here -->
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Enrolled Session:</h4>
+        <!-- start of current time supposed class -->
+        <button type="button" id="currentclass" class="btn btn-default btn-md btn-block">
+          <script>document.write(className)</script> (G2)
+        </button>
+        <script>$('#currentclass').focus();</script>
+        
+        <br />
+        <h4>Switch Session:</h4>
+        <button type="button" class="btn btn-default btn-md btn-block" onclick="participate()">
+          <script>document.write(className)</script> (G1)
+        </button>
+        <button type="button" class="btn btn-default btn-md btn-block" onclick="participate()">
+          <script>document.write(className)</script> (G3)
+        </button>
+      </div>
+    </div>
+    <br/>
+    <a class="btn btn-primary pull-right" id="nextButton"><i class="fa fa-arrow-circle-o-right"></i> Next</a>
+	</div>
+    <script>
+      // Get User
+      var user = GetParam.user;
+      if (!(user === "jabezlee")) {
+        $('#nextButton').prop('href', 'participate.html?user=' + user);
+      } else {
+        $('#nextButton').prop('href', 'prof.html');
+      }
+      if(!user && !(user === "jabezlee")){
+          alert('You are unauthorized to view this page');
+          document.location.href='login.html';
+      }
+      var userRef = studentRef.child(user);
+      
+      userRef.on('value', function(snapshot) {
+        if(snapshot.val() === null && !(user === "jabezlee")) {
+          alert('You are unauthorized to view this page');
+          document.location.href='login.html';
+        }else{
+        }
+      });
+      
+      function participate() {
+        if (user === "jabezlee") {
+          document.location.href='prof.html';
+        } else {
+          document.location.href='participate.html?user=' + user; 
+        }
+      }
+
+    </script>
+  </body>
+</html>

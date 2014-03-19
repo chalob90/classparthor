@@ -1,0 +1,99 @@
+<!DOCTYPE html>  
+<html>  
+  <head> 
+    <meta charset-"utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Select Your Class</title>
+	<!-- Bootstrap core CSS 
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet"/>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+  </head>
+  <body>
+    
+    <div id="backgroundbox">
+    </div>
+	<div class="container">
+		<!-- Logout button start here -->
+    <a class="btn btn-default btn-sm pull-right" href="login.html"><i class="fa fa-sign-out"></i> Logout</a>
+    <br />
+    <br />
+		<!-- Logout button end here -->
+		
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>Based on the current time, you should be at:</h4>
+          <!-- start of current time supposed class -->
+          <button type="button" id="currentclass" class="btn btn-default btn-md btn-block">
+            IS306 - Interaction Design and Prototyping (G2)
+          </button>
+          <script>$('#currentclass').focus();</script>
+          
+		      <br />
+          <h4>Not your current class or session? Please select below:</h4>
+          <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionAA()">
+            IS303 - Architectural Analysis
+          </button>
+          <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionEWS()">
+            IS305 - Enterprise Web Solutions
+          </button>
+          <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionIS480()">
+            IS480 - IS Application Project
+          </button>
+          <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionIDP()">
+            IS306 - Interactive Design and Prototyping
+          </button>   
+        </div>
+      </div>
+    <br/>
+			<a class="btn btn-primary pull-right" id="nextButton"><i class="fa fa-arrow-circle-o-right"></i> Next</a>
+	</div>
+    <script src="common.js"></script>
+    <script>
+      
+      var user = GetParam.user;
+      if (user === "jabezlee") {
+        $('#nextButton').prop('href', 'prof.html');
+      } else {
+        $('#nextButton').click(selectSessionIDP);
+      }
+        
+      if(!user && !(user === "jabezlee")){
+          alert('You are unauthorized to view this page');
+          document.location.href='login.html';
+      }
+      var userRef = studentRef.child(user);
+      
+      userRef.on('value', function(snapshot) {
+        if(snapshot.val() === null && !(user === "jabezlee")) {
+          alert('You are unauthorized to view this page');
+          document.location.href='login.html';
+        }else{
+        }
+      });
+
+      function selectSessionAA() {
+          document.location.href='/selectsession.html?class=aa&user=' + user;
+      }
+      
+      function selectSessionEWS() {
+          document.location.href='/selectsession.html?class=ews&user=' + user;
+      }
+      
+      function selectSessionIS480() {
+          document.location.href='/selectsession.html?class=is480&user=' + user;
+      }
+      
+      function selectSessionIDP() {
+          document.location.href='/selectsession.html?user=' + user + "&class=idp";
+      }
+      
+    </script>
+  </body>  
+</html>

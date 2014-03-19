@@ -1,0 +1,303 @@
+<html>  
+  <head> 
+	<meta charset-"utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Reward Points Page</title>
+	<!-- Bootstrap core CSS -->
+    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="common.js"></script>
+  </head>
+  <body>
+    <div class="container">
+		<!-- Logout button start here -->
+      <a class="btn btn-default btn-default pull-left btn-sm" href="prof.html" onclick="unpickStudent()"><i class="fa fa-undo"></i> Volunteer List</a>
+      <a href="summaryofclass(endsession).html"><button class="btn btn-default btn-sm btn-warning pull-right" onclick="createEndSession()"><i class="fa fa-home"></i> End Session</button></a>    
+      <br />
+		<!-- Logout button end here -->
+    
+      <br /><div id="seatdetails" style="text-align:center;padding-bottom:0px;"></div>
+    <style>
+      td { 
+        padding: 5px;
+      }
+    </style>
+    
+    <br />
+    <div class="row" style="text-align:center">
+      <div class="col-xs-12">
+        <div id="mainButton">
+          <script>
+            var user = GetParam.student;
+            var seat = null;
+            
+            var userDetailsRef = studentRef.child(user);
+            userDetailsRef.once('value', function(snapshot) {
+              if(snapshot.val() === null) {
+                alert('You are not authorized to access this page!');
+                document.location.href='login.html';
+              }else{
+                $('#studentphoto').html('<img src="' + snapshot.val().photo + '" style="max-width:70px">');
+                $('#studentdetails').html('');
+                $('#studentdetails').append(snapshot.val().preferredName + '<br/>');
+                $('#studentdetails').append(snapshot.val().todayCount + '<br/>');
+                $('#studentdetails').append(snapshot.val().seatNumber + '<br/>');
+              }
+              seat = snapshot.val().seatNumber;
+              pickStudent(user);
+              drawSeats();
+            });
+          
+            function drawSeats() {
+              for (var k=2;k>-1;k--) {
+                for (var i=0;i<3;i++) {
+                  for (var j=0;j<6;j++) {
+                    // Add logic here to change the picture to circle if the student's seat is on which row, which column, which seat
+                    if (!(seat === null)) {
+                      var row = parseInt((seat-1) / 18, 0);
+                      var column = parseInt((seat - 1) % 18 / 6, 0);
+                      var num = parseInt((seat-1) % 6, 0);
+                      
+                      if (k == row && i == column && num == j) {
+                        $('#seatdetails').append("<font style=\"font-size:1em\">X</font>");
+                      } else {
+                        $('#seatdetails').append("<font style=\"font-size:1em\">O</font>");
+                      }
+                    } else {
+                      $('#seatdetails').append("<font style=\"font-size:1em\">O</font>");
+                    }
+                  }
+                  if (i != 2) {
+                    $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                  }
+                }
+                $('#seatdetails').append("<br />");
+              }
+            }
+          </script>
+        </div>
+      </div>
+    </div>
+      
+    <script>
+      // retrieve student's details here
+      
+      
+      
+      
+    </script>
+  </div>
+    <div class="row well" style="padding:0px;margin-bottom:0px;">
+      <table align="center" style="font-size:0.8em">
+        <tr>
+          <td id="studentphoto"><!-- insert student picture -->
+          </td>
+          <td>
+            <strong>
+              Name:<br/>
+              Class Part Count:<br/>
+              Seat No.:<br />
+            </strong>
+          </td>
+          <!-- insert student details -->
+          <td id="studentdetails"></td>
+        </tr>
+      </table>
+    </div>
+    
+    <!-- points to be awarded below -->
+    <div class="container" style="text-align:center;">
+      <h4>Rate Participation</h4>
+      <img src="images/zeropoint.png" id="zeroPoint" onclick="selectZeroPoint()" style="max-width:30%;float:center;" /> 
+      <img src="images/onepoint.png" id="onePoint" onclick="selectOnePoint()" style="max-width:30%;float:center;" /> 
+      <img src="images/twopoints.png" id="twoPoints" onclick="selectTwoPoints()" style="max-width:30%;float:center;" /> 
+      <br /><p style="padding-top:10px;"/>
+      <button id="rewardStudentButton" type="submit" class="btn btn-block btn-success btn-lg"><i class="fa fa-trophy"></i> Award Points</button>
+     </div>
+    
+    <script>
+      
+      var selectedPoints = 0;
+      var isPointSelected = false;
+      
+      function selectZeroPoint(){
+        if (document.getElementById("zeroPoint").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/zeropoint.png") 
+        {
+          document.getElementById("zeroPoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/zeropoint1.png";
+          // end change color of one point and two points icons
+          if (document.getElementById("onePoint").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/onepoint1.png") {
+             document.getElementById("onePoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/onepoint.png";
+          }
+          
+          if (document.getElementById("twoPoints").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/twopoints1.png") {
+             document.getElementById("twoPoints").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/twopoints.png";
+          }
+          // end change color of one point and two points icons            
+          selectedPoints = 0;
+          isPointSelected = true;
+          console.log(selectedPoints);
+        }
+        else 
+        {
+           document.getElementById("zeroPoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/zeropoint.png";
+           selectedPoints = 0;    
+           isPointSelected = false;
+           console.log(selectedPoints);
+        }
+      }
+      
+      function selectOnePoint(){
+        if (document.getElementById("onePoint").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/onepoint.png") 
+        {
+          document.getElementById("onePoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/onepoint1.png";
+          // start change color of zero point and two points icons
+          if (document.getElementById("zeroPoint").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/zeropoint1.png") {
+             document.getElementById("zeroPoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/zeropoint.png";
+          }
+          
+          if (document.getElementById("twoPoints").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/twopoints1.png") {
+             document.getElementById("twoPoints").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/twopoints.png";
+          }
+          // end change color of zero point and two points icons
+          selectedPoints = 1;
+          isPointSelected = true;
+          console.log(selectedPoints);
+        }
+        else 
+        {
+           document.getElementById("onePoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/onepoint.png";
+           selectedPoints = 0; 
+           isPointSelected = false;    
+           console.log(selectedPoints);
+        }          
+      }
+      
+      function selectTwoPoints(){
+        if (document.getElementById("twoPoints").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/twopoints.png") 
+        {
+          document.getElementById("twoPoints").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/twopoints1.png";
+          
+          // start change color of zero point and one point icons
+          if (document.getElementById("zeroPoint").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/zeropoint1.png") {
+             document.getElementById("zeroPoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/zeropoint.png";
+          }
+          
+          if (document.getElementById("onePoint").src == "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/onepoint1.png") {
+             document.getElementById("onePoint").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/onepoint.png";
+          }          
+          // end change color of zero point and one point icons
+          isPointSelected = true;
+          selectedPoints = 2; 
+          console.log(selectedPoints);
+        }
+        else 
+        {
+           document.getElementById("twoPoints").src = "http://geoffreybox-59768.apse1.nitrousbox.com:8888/images/twopoints.png";
+           isPointSelected = false;
+           selectedPoints = 0;    
+           console.log(selectedPoints);
+        }       
+      }
+            
+      function unselectStudent() {  // used after student is given the mark or when clear button is clicked. button not implemented yet
+        var pickStudentRef = appRef.child('pickstudent');
+        pickStudentRef.remove();
+      }
+      
+      function pickStudent(studentName) {
+        // prof picks student
+        var pickStudentRef = appRef.child('pickstudent'); 
+        var pickStudentObj = {};
+        pickStudentObj[studentName] = {timestamp: Date.now()};
+        pickStudentRef.update(pickStudentObj);
+        
+        var unpickStudentRef = appRef.child('unpickstudent');
+        unpickStudentRef.child(studentName).remove();
+      }
+      
+      function unpickStudent() {
+        // prof picks student
+        var studentName = user;
+        //alert("student: " + studentName);
+        var unpickStudentRef = appRef.child('unpickstudent'); 
+        var unpickStudentObj = {};
+        unpickStudentObj[studentName] = {timestamp: Date.now()};
+        unpickStudentRef.update(unpickStudentObj);
+        
+        var pickStudentRef = appRef.child('pickstudent');
+        pickStudentRef.child(studentName).remove();
+        //alert("Unpick Student");
+      }
+      
+      // Add onclick for points button
+      $('#rewardStudentButton').click(function(){
+        var studentName = GetParam.student;
+        var rewardPoints = selectedPoints;
+        var student = studentRef.child(studentName);
+        var currentTodayScore;
+        var newTodayScore;
+        var currentSemScore;
+        var newSemScore;
+        var currentTodayCount;
+        var newTodayCount;
+        var currentSemCount;
+        var newSemCount;
+        var rewardStudentObj = {};
+        
+        if (isPointSelected) {
+          student.once('value', function(snapshot) {
+          if (snapshot != null) {
+            currentTodayCount = snapshot.val().todayCount;
+            currentTodayScore = snapshot.val().todayScore;
+            currentSemCount = snapshot.val().semesterCount;
+            currentSemScore = snapshot.val().semesterScore;
+            
+            // Increment counts
+            newTodayCount = currentTodayCount + 1;
+            newSemCount = currentSemCount + 1;
+            
+            // Increment scores
+            newTodayScore = currentTodayScore + rewardPoints;
+            newSemScore = currentSemScore + rewardPoints;            
+            
+            // Give points to user  
+            student.child('semesterCount').set(newSemCount);
+            student.child('todayCount').set(newTodayCount);
+            student.child('semesterScore').set(newSemScore);
+            student.child('todayScore').set(newTodayScore);
+            
+            // Reset hand raises for all students (Clear picked & unpicked tables)
+            appRef.child('pickstudent').remove();            
+            appRef.child('unpickstudent').remove();
+            
+            // Remove graded user from hand raised
+            appRef.child('handraise').child(studentName).remove();
+            
+            // Redirect user back to prof.html
+            window.location.replace("/prof.html");
+            
+          } else {
+            // Handle null case 
+          }
+          });
+        }else{
+          alert('Please select the number of points');
+        }
+       });
+           
+          function createEndSession() {
+            var endSessionRef = appRef.child('endsession'); 
+            var endSessionObj = {};
+            endSessionObj["endsession"] = {timestamp: Date.now()};
+            endSessionRef.update(endSessionObj);
+            
+            clearStudents();
+          }  
+    </script>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>  
+<html>  
+  <head> 
+	  <meta charset-"utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <title>Select Your Session</title>
+	  <!-- Bootstrap core CSS -->
+    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet">
+    
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet"/>
+    <link href="http://elrumordelaluz.github.io/csshake/css/csshake.min.css" rel="stylesheet"/>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="common.js"></script>
+    <style>
+      img { 
+        opacity: 0.85; 
+      } 
+      img:hover { 
+        opacity: 1; 
+      }
+      td { 
+        padding: 5px;
+      }
+
+    </style>
+    
+  </head>
+  <body>
+    <div class="container">
+      <a class="btn btn-sm btn-default pull-left" id="selectsessionbtn" href="selectclass.html"><i class="fa fa-undo"></i> Back to Select Session</a>  
+      <script>$('#selectsessionbtn').prop('href', 'selectsession.html?user=' + GetParam.user);</script>
+      <a class="btn btn-sm btn-default pull-right" href="login.html"><i class="fa fa-sign-out"></i> Logout</a>
+      <br/>
+      <br/>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="well" style="padding:0px">
+      <table align="center" style="font-size:0.8em">
+        <tr>
+          <td id="studentphoto">
+          </td>
+          <td>
+            <strong>
+              Name:<br/>
+              Seat No:<br/>
+              Partipation<br/>Count:<br/>
+            </strong>
+          </td>
+          <td id="studentdetails">
+          </td>
+        </tr>
+      </table>
+          </div>
+        </div>
+    </div>
+    <div class="row" style="text-align:center">
+      <div class="col-lg-12">
+        <div id="mainButton" onclick="volunteer();" style="cursor:pointer;" align="center"> 
+        </div>
+        <h4 id="mainText"></h4>
+      </div>
+    </div>
+    </div>
+    <script>
+      var volunteering = false;
+      var user = GetParam.user;
+      
+      var userDetailsRef = studentRef.child(user);
+      userDetailsRef.on('value', function(snapshot) {
+        if(snapshot.val() === null) {
+          alert('You are not authorized to access this page!');
+          document.location.href='login.html';
+        }else{
+          $('#studentphoto').html('<img src="' + snapshot.val().photo + '" style="max-width:70px">');
+          $('#studentdetails').html('');
+          $('#studentdetails').append('<a id="preferredName">' + snapshot.val().preferredName + '</a><br/>');
+          $('#studentdetails').append('<a id="seatNum">' + snapshot.val().seatNumber + '</a><br/>');
+          $('#studentdetails').append(snapshot.val().semesterCount + ' this semester<br/>');
+          $('#studentdetails').append(snapshot.val().todayCount + ' today<br/>');
+          
+        }
+      });
+      
+      var handRaiseRef = appRef.child('handraise');
+      var userRef = handRaiseRef.child(user);
+      
+      // check for end session object
+      var endSessionRef = appRef.child('endsession');
+      var endSession = endSessionRef.child('endsession');
+      
+      endSessionRef.on('value', function(snapshot) {
+        if (!(snapshot.val() === null)) {
+          // if don't have end session object
+          $('#mainButton').remove();
+          $('#mainText').html('Session has ended!');
+        } else {
+          // if have end session object
+          buttonUp = new Image();
+          buttonUp.src="images/buttonup.png";
+          buttonUp.style="max-width:50%";
+          
+          
+          buttonDown = new Image();
+          buttonDown.src="images/buttondown.png";
+          buttonDown.style="max-width:50%";
+          
+          userRef.on('value', function(snapshot) {
+            if(snapshot.val() === null) {
+              $('#mainButton').html(buttonUp);
+              $(buttonUp).css("max-width", "50%");
+              //$(buttonUp).css("max-height", "50%");
+              $('#mainText').html('Volunteer to participate by hitting the button above!');
+              volunteering = false;
+            }else{
+              $('#mainButton').html(buttonDown);
+              $(buttonDown).css("max-width", "50%");
+              //$(buttonDown).css("max-height", "50%");
+              
+              // check if prof picked student
+              var pickStudentRef = appRef.child('pickstudent');
+              var pickRef = pickStudentRef.child(user);
+              
+              pickRef.on('value', function(snapshot) {
+                var unpickStudentRef = appRef.child('unpickstudent');
+                var unpickRef = unpickStudentRef.child(user);
+                
+                var titleNotifications = [];
+                
+                unpickRef.on('value', function(snapshot1) {
+                  if (snapshot.val() === null && snapshot1.val() === null) { //prof has not picked or unpicked student
+                    $('#mainText').html('Volunteered! Wait for the Professor to pick you...');
+                    
+                    $('#mainButton').removeClass("shake");
+                    $('#mainButton').removeClass("shake-slow");
+                    $('#mainButton').removeClass("shake-opacity");
+                    $('#mainButton').removeClass("shake-constant");
+                    clearInterval(interval);
+                    document.title = "Volunteered! Wait for the Professor to pick you...";
+                  } else if (snapshot.val() === null && !(snapshot1.val() === null)) { //prof has picked and unpicked student
+                    $('#mainText').html('Request Cancelled! Wait for the Professor to pick you...');
+                    
+                    $('#mainButton').removeClass("shake");
+                    $('#mainButton').removeClass("shake-slow");
+                    $('#mainButton').removeClass("shake-opacity");
+                    $('#mainButton').removeClass("shake-constant");
+                    clearInterval(interval);
+                    document.title = "Request Cancelled! Wait for the Professor to pick you again...";
+                  } else { // prof picked and not unpicked **case cannot be unpicked yet not picked**
+                    $('#mainText').html('You have been selected!');
+                    $('#mainButton').addClass("shake");
+                    $('#mainButton').addClass("shake-slow");
+                    $('#mainButton').addClass("shake-opacity");
+                    $('#mainButton').addClass("shake-constant");
+                    makeBlink('You have been selected!');
+                  }
+                });
+              });
+              volunteering = true;
+            }
+          });
+        }
+      });
+             
+      var interval = null;
+      function makeBlink(newTitle){
+        clearInterval(interval);
+        var isOldTitle = true;
+        var oldTitle = "!!!";
+        function changeTitle() {
+            document.title = isOldTitle ? oldTitle : newTitle;
+            isOldTitle = !isOldTitle;
+        }
+        interval = setInterval(changeTitle, 1000);
+        
+        $(window).focus(function () {
+            clearInterval(interval);
+            $("title").text(isOldTitle?newTitle:$("title").text());
+        });
+      }
+      function volunteer(){
+        if(!volunteering){
+          var handRaiseObj = {};
+          handRaiseObj[user] = {
+            name: user,
+            timestamp: Date.now()
+          };
+          handRaiseRef.update(handRaiseObj);
+        }else{
+          userRef.remove();
+        }
+      }
+    </script>
+  </body>
+</html>

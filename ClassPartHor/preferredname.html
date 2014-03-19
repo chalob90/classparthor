@@ -1,0 +1,82 @@
+<!DOCTYPE html>  
+<html>  
+  <head> 
+	<meta charset-"utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Enter Your Preferred Name</title>
+	<!-- Bootstrap core CSS 
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+  </head>
+  <!--<body style="background-color:#3F6B8A">-->
+  <body>
+    <div id="backgroundbox">
+    </div>
+	<div class="container">
+		<!-- Logout button start here -->
+    
+		<div class="form-signin">
+      <a class="btn btn-default btn-default pull-right" type="submit" href="login.html"><i class="fa fa-sign-out"></i> Logout</a>
+      <br />
+      <br />
+    </div>
+		<form class="form-signin" role="form">
+      <div class="row">
+        <div class="col-xs-12"><h3>Preferred Name:</h3></div>
+        <div class="col-xs-12"><input class="form-control" type="text" name="preferredname" id="preferredname"/></div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-12"><h3>Update Seat No.:</h3></div>
+        <div class="col-xs-12">
+          <select class="form-control" type="text" name="seatno" id="seatno">
+          </select>
+        </div>
+      </div>
+      <br/>
+      
+			<div class="row">
+        <div class="col-xs-12">
+          <button class="btn btn-primary pull-right" onclick="setDetails(); return false;"><i class="fa fa-arrow-circle-o-right"></i> Next</button>
+        </div>
+      </div>
+      </form>
+	</div>
+    <script src="common.js"></script>
+    <script>
+      for(var i=1; i<=50; i++){
+        $('#seatno').append('<option value="' + i + '">' + i + '</option>');
+      }
+      var user = GetParam.user;
+      if(!user){
+          alert('You are unauthorized to view this page');
+          document.location.href='login.html';
+      }
+      var userRef = studentRef.child(user);
+      
+      userRef.on('value', function(snapshot) {
+        if(snapshot.val() === null) {
+          alert('You are unauthorized to view this page');
+          document.location.href='login.html';
+        }else{
+          $('#preferredname').val(snapshot.val().preferredName);
+          $('#seatno').val(snapshot.val().seatNumber);
+        }
+      });
+      function setDetails(){
+        userRef.update({
+          preferredName: $('#preferredname').val(),
+          seatNumber: $('#seatno').val()
+        });
+        document.location.href='selectclass.html?user=' + GetParam.user;
+        return false;
+      }
+    </script>
+  </body>
+</html>

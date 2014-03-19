@@ -1,0 +1,111 @@
+<html>  
+  <head> 
+	<meta charset-"utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>End of Class (List)</title>
+	<!-- Bootstrap core CSS -->
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
+    
+    <!-- JS for JQuery and JQueryUI-->
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="js/jqueryui/jquery-ui.min.js"></script>
+    
+    <!-- JS for Firebase -->
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+    <script src="common.js"></script>
+    
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  
+  </head>
+  <body>
+	<div class="container">
+		<!-- buttons start here -->
+    <a class="btn btn-sm btn-default pull-left" id="selectsessionbtn" href="selectclass.html"><i class="fa fa-undo"></i> Select Session</a>
+    <a class="btn btn-sm btn-default pull-right" href="login.html"><i class="fa fa-sign-out"></i> Logout</a>
+		<br /><br /><br />
+      
+      <div class="nav nav-tabs">
+        <!--<li class="active">-->
+          <a href="summaryofclass(thumbnailview).html">Change View to Thumbnail</a>
+        <!--</li>-->
+      </div>
+    
+      <div class="tab-pane">
+      <table class="table table-hover" id="listview">
+        <tr>
+          <th>Name</th>
+          <th>Class Part Count</th>
+          <th>Seat No</th>
+        </tr>
+        
+      </table>  
+
+      </div>
+    </div>
+		<!-- buttons end here -->
+    
+    <style> 
+      .btn {
+        margin: 7px;  
+      }
+      
+      .bg-success, .bg-info, .bg-warning, .bg-danger  {
+        padding: 10px;  
+      }
+      
+      img { 
+        width: 55px;
+        height: 55px;
+        margin-top: 3px;
+        margin-right: 10px;
+        float: left;
+      } 
+      img:hover { 
+        opacity: 1; 
+      }
+      td { 
+        padding: 5px;
+      }
+    </style>
+    <br />
+    <script>
+      studentRef.on('value', function(snapshot) {
+        //alert('student’s first name is' + snapshot.val());
+        
+        
+        snapshot.forEach(function(childSnapshot) {
+            var studentObj = childSnapshot.val();
+            var studentName = studentObj.name;
+            var listHTML = "<tr><td>" + studentObj.preferredName + "</td>" 
+                          + "<td>" + studentObj.todayCount + "</td>" 
+                          + "<td>" + studentObj.seatNumber + "</td></tr>";
+            $("#listview").append(listHTML);
+            
+          });
+        
+      });
+      /* var sRef = appRef.child('students');
+        sRef.once('value', function(snap) {
+          //var students = [];
+          snap.forEach(function(student) {
+            var studentObj = student.val();
+            
+            var listHTML = "<tr><td>" + studentObj.preferredName + "</td>" 
+                        + "<td>" + studentObj.todayCount + "</td>" 
+                        + "<td>" + studentObj.seatNumber + "</td></tr>";
+                $("#listtable").append(listHTML);
+          });*/
+      
+      </script>
+
+    
+  </body>
+  
+
+  
+</html>
+
+

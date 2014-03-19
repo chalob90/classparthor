@@ -1,0 +1,68 @@
+<!DOCTYPE html>  
+<html>  
+  <head> 
+	  <meta charset-"utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <title>Welcome to Class Part Hor!</title>
+	  <!-- Bootstrap core CSS -->
+    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet"/>
+  <!--
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">
+  -->
+    <!-- Custom styles for this template -->
+  
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+  </head>
+  
+  
+  <body>
+    <div id="backgroundbox">
+    </div>
+	<div class="container">
+    <form>
+    <div class="row">
+      <div class="col-lg-12" style="text-align:center">
+        <h2><span style="padding-right:1em">Welcome To</span><br/>
+          <span class="text-warning">CLASS PART</span><br/>
+          <span class="text-warning" style="padding-left:4em">HOR!</span></h2>
+      </div>
+    </div>
+		<div class="form-signin">
+			<input type="text" id="userID" class="form-control" placeholder="User ID (eg. ahkow.tan.2011)" required autofocus>
+			<input type="password" class="form-control" placeholder="Password" required>
+      <label class="checkbox">
+        <input type="checkbox" value="remember-me"/> <font style="color:#000000;font-size:10pt;vertical-align:text-top">Remember me</font>
+			</label>
+			<button class="btn btn-primary pull-right" onclick="checkSignIn();return false;"><i class="fa fa-sign-in"></i> Sign in</button>
+    </div>
+    </form>
+	</div>
+    <script src="common.js"></script>
+    <script>
+      function checkSignIn(){
+        var userID = $('#userID').val();
+        var find = '\\.';
+        var re = new RegExp(find, 'g');
+        userID = userID.replace(re, '_');
+        var userDetailsRef = studentRef.child(userID);
+        userDetailsRef.on('value', function(snapshot) {
+          if(snapshot.val() === null && !(userID === "jabezlee")) {
+            alert('Invalid username/password');
+          }else{
+            if (userID === "jabezlee") {
+              var endSessionRef = appRef.child('endsession');
+              endSessionRef.remove();
+              
+              document.location.href="selectclass.html?user=" + userID;
+            } else {
+              document.location.href="preferredname.html?user=" + userID;
+            }
+          }
+        });
+      }
+    </script>
+  </body>  
+</html>
