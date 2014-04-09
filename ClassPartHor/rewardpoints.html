@@ -14,27 +14,35 @@
     <script src="common.js"></script>
   </head>
   <body>
-    <div class="container">
+    <div class="container" style="text-align:center">
 		<!-- Logout button start here -->
-      <a class="btn btn-default btn-default pull-left btn-sm" href="prof.html" onclick="unpickStudent()"><i class="fa fa-undo"></i> Volunteer List</a>
-      <a href="summaryofclass(endsession).html"><button class="btn btn-default btn-sm btn-warning pull-right" onclick="createEndSession()"><i class="fa fa-home"></i> End Session</button></a>    
+      <a class="btn btn-default btn-default pull-left btn-sm" id="volunteerlistbtn" onclick="unpickStudent()"><i class="fa fa-undo"></i> Volunteer List</a>
+      <script>$('#volunteerlistbtn').prop('href', 'prof.html?session=' + GetParam.session);</script>
+      <a href="summaryofclass(endsession).html"><button class="btn btn-default btn-sm btn-warning pull-right" onclick="createEndSession()"><i class="fa fa-home"></i> End Session</button></a>   
       <br />
 		<!-- Logout button end here -->
-    
-      <br /><div id="seatdetails" style="text-align:center;padding-bottom:0px;"></div>
+      <div id="locationheader" style="margin-top:30px;"></div>
+      <!--<div> L/RPrototype
+      <img src="images/zeropoint.png" id="zeroPoint" onclick="selectZeroPoint()" style="max-width:30%;float:center;" /> 
+      <img src="images/onepoint.png" id="onePoint" onclick="selectOnePoint()" style="max-width:30%;float:center;" /> 
+      </div>-->
+     <div id="seatdetails" style="text-align:center;padding-bottom:0px;"></div>
     <style>
       td { 
         padding: 5px;
       }
+      
     </style>
     
-    <br />
+    <br/>
     <div class="row" style="text-align:center">
       <div class="col-xs-12">
         <div id="mainButton">
           <script>
             var user = GetParam.student;
+            var session = GetParam.session;
             var seat = null;
+            var photo = "";
             
             var userDetailsRef = studentRef.child(user);
             userDetailsRef.once('value', function(snapshot) {
@@ -42,11 +50,14 @@
                 alert('You are not authorized to access this page!');
                 document.location.href='login.html';
               }else{
+                photo = snapshot.val().photo;
                 $('#studentphoto').html('<img src="' + snapshot.val().photo + '" style="max-width:70px">');
                 $('#studentdetails').html('');
                 $('#studentdetails').append(snapshot.val().preferredName + '<br/>');
                 $('#studentdetails').append(snapshot.val().todayCount + '<br/>');
                 $('#studentdetails').append(snapshot.val().seatNumber + '<br/>');
+                
+                $('#locationheader').append("<h4>" + snapshot.val().preferredName + "'s Seat Location</h4>");
               }
               seat = snapshot.val().seatNumber;
               pickStudent(user);
@@ -54,29 +65,96 @@
             });
           
             function drawSeats() {
-              for (var k=2;k>-1;k--) {
-                for (var i=0;i<3;i++) {
-                  for (var j=0;j<6;j++) {
-                    // Add logic here to change the picture to circle if the student's seat is on which row, which column, which seat
-                    if (!(seat === null)) {
-                      var row = parseInt((seat-1) / 18, 0);
-                      var column = parseInt((seat - 1) % 18 / 6, 0);
-                      var num = parseInt((seat-1) % 6, 0);
-                      
-                      if (k == row && i == column && num == j) {
-                        $('#seatdetails').append("<font style=\"font-size:1em\">X</font>");
+              for (var i = 2; i > 0; i--) {
+                for (var j = 11; j > 0; j--) {
+                  if (i > 1) {
+                    if (j > 0) {
+                      if (!(seat === null) && seat < 51 && seat > 39 && j === (seat - 39)) {
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:12px;\" /></font>");
                       } else {
-                        $('#seatdetails').append("<font style=\"font-size:1em\">O</font>");
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px;\" /></font>");
                       }
                     } else {
-                      $('#seatdetails').append("<font style=\"font-size:1em\">O</font>");
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                    }
+                  } else {
+                    if (j > 2) {
+                      if (!(seat === null) && seat < 40 && seat > 30 && j === (seat - 28)) {
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:15px\"/></font>");
+                      } else {
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px;\" /></font>");
+                      }
+                    } else {
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
                   }
-                  if (i != 2) {
-                    $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                }
+              
+                if (i > 1) {
+                  $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                }
+              }
+              
+              $('#seatdetails').append("<br />"); // go to next line
+              
+              for (var i = 2; i > 0; i--) {
+                for (var j = 11; j > 0; j--) {
+                  if (i > 1) {
+                    if (j < 9) {
+                      if (!(seat === null) && seat < 31 && seat > 22 && j === (seat - 22)) {
+                         $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:15px\"/></font>");
+                      } else {
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='/images/seat.png' style=\"max-width:15px\"/></font>");
+                      }
+                    } else {
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                    }
+                  } else {
+                    if (j > 1) {
+                      if (!(seat === null) && seat < 23 && seat > 12 && j === (seat - 11)) {
+                         $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:15px\"/></font>");
+                      } else {
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px;\" /></font>");
+                      }
+                    } else {
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                    }
                   }
                 }
-                $('#seatdetails').append("<br />");
+                if (i > 1) {
+                  $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                }
+              }
+              
+              $('#seatdetails').append("<br />"); // go to next line
+              
+              for (var i = 2; i > 0; i--) {
+                for (var j = 11; j > 0; j--) {
+                  if (i > 1) {
+                    if (j < 7) {
+                      if (!(seat === null) && seat < 13 && seat > 6 && j === (seat - 6)) {
+                         $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:15px\"/></font>");
+                      } else {
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px;\" /></font>");
+                      }
+                    } else {
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                    }
+                  } else {
+                    if (j > 5) {
+                      if (!(seat === null) && seat < 7 && j === (parseInt(seat) + 5)) {
+                         $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:15px\"/></font>");
+                      } else {
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px;\" /></font>");
+                      }
+                    } else {
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;");
+                    }
+                  }
+                }
+                if (i > 1) {
+                  $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                }
               }
             }
           </script>
@@ -110,8 +188,11 @@
       </table>
     </div>
     
+    
+    
     <!-- points to be awarded below -->
-    <div class="container" style="text-align:center;">
+    <div class="container" style="text-align:center;margin-top:10px"> <!--position:absolute;bottom:0;-->
+      
       <h4>Rate Participation</h4>
       <img src="images/zeropoint.png" id="zeroPoint" onclick="selectZeroPoint()" style="max-width:30%;float:center;" /> 
       <img src="images/onepoint.png" id="onePoint" onclick="selectOnePoint()" style="max-width:30%;float:center;" /> 
@@ -119,7 +200,6 @@
       <br /><p style="padding-top:10px;"/>
       <button id="rewardStudentButton" type="submit" class="btn btn-block btn-success btn-lg"><i class="fa fa-trophy"></i> Award Points</button>
      </div>
-    
     <script>
       
       var selectedPoints = 0;
@@ -279,7 +359,7 @@
             appRef.child('handraise').child(studentName).remove();
             
             // Redirect user back to prof.html
-            window.location.replace("/prof.html");
+            window.location.replace("/prof.html?session=" + session);
             
           } else {
             // Handle null case 
@@ -290,14 +370,14 @@
         }
        });
            
-          function createEndSession() {
-            var endSessionRef = appRef.child('endsession'); 
-            var endSessionObj = {};
-            endSessionObj["endsession"] = {timestamp: Date.now()};
-            endSessionRef.update(endSessionObj);
-            
-            clearStudents();
-          }  
+      function createEndSession() {
+        var endSessionRef = appRef.child('endsession'); 
+        var endSessionObj = {};
+        endSessionObj["endsession"] = {timestamp: Date.now()};
+        endSessionRef.update(endSessionObj);
+        
+        clearStudents();
+      }  
     </script>
   </body>
 </html>

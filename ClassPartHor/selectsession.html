@@ -7,13 +7,16 @@
 	<!-- Bootstrap core CSS 
     <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">-->
 
-    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet"/>
-    <!-- Custom styles for this template -->
-    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet"/>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->  
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->  
+    <link href="font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet">
+    <!-- JQuery -->  
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <!-- Firebase -->
+    <script type='text/javascript' src='js/firebase.js'></script>
     <script src="common.js"></script>
   </head>
   <body>
@@ -22,17 +25,18 @@
     </div>
     
     <script>
-      var className = GetParam.class;
+      //var className = GetParam.class;
        // Get Class and Display Accordingly
       var className = GetParam.class;
+      var orgClassName = GetParam.class;
       if (className === "aa") {
-        className = "IS303 - Architectual Analysis";
+        className = "IS303 - AA";
       } else if (className === "ews") {
-        className = "IS305 - Enterprise Web Solutions";
+        className = "IS305 - EWS";
       } else if (className ==="idp"){
-        className = "IS306 - Interaction Design and Prototyping"
+        className = "IS306 - IDP"
       } else {
-        className = "IS480 - Final Year Project"
+        className = "IS480 - FYP"
       }
     </script>
 	<div class="container">
@@ -54,10 +58,10 @@
         
         <br />
         <h4>Switch Session:</h4>
-        <button type="button" class="btn btn-default btn-md btn-block" onclick="participate()">
+        <button type="button" class="btn btn-default btn-md btn-block" onclick="participate('g1')">
           <script>document.write(className)</script> (G1)
         </button>
-        <button type="button" class="btn btn-default btn-md btn-block" onclick="participate()">
+        <button type="button" class="btn btn-default btn-md btn-block" onclick="participate('g3')">
           <script>document.write(className)</script> (G3)
         </button>
       </div>
@@ -69,9 +73,9 @@
       // Get User
       var user = GetParam.user;
       if (!(user === "jabezlee")) {
-        $('#nextButton').prop('href', 'participate.html?user=' + user);
+        $('#nextButton').prop('href', 'participate.html?user=' + user + "&session=" + orgClassName + "g2");
       } else {
-        $('#nextButton').prop('href', 'prof.html');
+        $('#nextButton').prop('href', 'prof.html?session=' + orgClassName + "g2");
       }
       if(!user && !(user === "jabezlee")){
           alert('You are unauthorized to view this page');
@@ -87,11 +91,11 @@
         }
       });
       
-      function participate() {
+      function participate(session) {
         if (user === "jabezlee") {
-          document.location.href='prof.html';
+          document.location.href='prof.html?session=' + orgClassName + session;
         } else {
-          document.location.href='participate.html?user=' + user; 
+          document.location.href='participate.html?user=' + user + "&session=" + orgClassName + session; 
         }
       }
 

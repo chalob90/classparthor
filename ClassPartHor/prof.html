@@ -3,28 +3,45 @@
 	<meta charset-"utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Professor's Page</title>
-	<!-- Bootstrap core CSS 
-    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">-->
-
-    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet"/>
-
-    <!-- Custom styles for this template -->    
+  	<!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->  
     <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <!-- CSS for animation -->
-    <link href="css/animate.css" rel="stylesheet">
-    <!-- JS for JQuery and JQueryUI-->
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <!-- Font Awesome CSS -->  
+    <link href="font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet">
+    <!-- JQuery -->  
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <!-- Firebase -->
+    <script type='text/javascript' src='js/firebase.js'></script>    
     <script src="js/jqueryui/jquery-ui.min.js"></script>
-    
-    <!-- JS for Firebase -->
-    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
     <script src="common.js"></script>
+    <script src="js/isotope.js"></script>
+    <link href="css/animate.css" rel="stylesheet">
+    <style>
+      .isotope-element {
+        position: relative;
+		    padding: 5px;
+        width: 100%;
+		    left: 15px;
+      }
+	  
+	  .isotope-container{
+		position: relative;
+	  }
+    </style>
+    
   </head>
   <body>
+    <script>
+      var session = GetParam.session;
+      var sessionArr = session.split("g");
+      var lesson = sessionArr[0];
+    </script>
+    
     <div class="container" style="text-align:center">
-      <a class="btn btn-sm btn-default pull-left" id="selectsessionbtn" href="selectclass.html"><i class="fa fa-undo"></i> 
-        Select Session</a>  
+      <a class="btn btn-sm btn-default pull-left" id="selectsessionbtn"><i class="fa fa-undo"></i> 
+        Select Session</a>
+      <script>$('#selectsessionbtn').prop('href', 'selectsession.html?class=' + lesson + '&user=jabezlee');</script>
       <a href="summaryofclass(endsession).html"><button class="btn btn-default btn-sm btn-warning pull-right" onclick="createEndSession()"><i class="fa fa-home"></i> End Session</button></a>      
 		<br />
 		<!-- Logout button end here -->
@@ -33,8 +50,7 @@
       .img-thumbnail {
         width: 50px;
         height: auto;
-      }
-      
+      }      
       
       img { 
         opacity: 0.85; 
@@ -48,28 +64,25 @@
     </style>
     <br />
       <div class="row" style="text-align:center">
-        <div class="col-lg-12 tab-pane">
-          <h4 id="pickRandomStudent">No students volunteering.</h4>
-        </div>
+         <h4 id="pickRandomStudent">No students volunteering.</h4>
+        <!-- <button id="sort">Sort</button> -->
+        <div id="theStudentContainer" class="col-lg-12 isotope-container" style="padding:0px"></div>
         
-        <script>
-          
+        <script>          
           //$(document).ready(function() {
             var volunteering = false;
             var handRaiseRef = appRef.child('handraise');
+            var session = GetParam.session;
             
             handRaiseRef.on('value', function(snapshot) {
               //console.log(snapshot.val());
-              if (snapshot.val() == null) {
+              if (snapshot.val() == null) {    // && $('#mainButton').length == 0) {
                 // Add Button and notification when no students hand raised
                 $('#pickRandomStudent').html('No students are volunteering.');
                 $(".col-lg-12").append("<div id='mainButton' style='cursor:pointer;' onclick='pickRandomStudent()'>" + 
                  "<img src='images/buttonup.png' style='max-width:50%; max-height:50%'/><br/><h4>Press to call a random student!</h4></div>");
                 $(".studentraised").remove();
               } else {
-                // Remove buttons
-                $("#mainButton").remove();
-                
                 // Compare number in arrays              
                 var numIncomingElems = snapshot.numChildren();
                 var numExistingElems = $(".studentraised").length;
@@ -78,44 +91,51 @@
                 if (numIncomingElems > numExistingElems) {
                   
                   snapshot.forEach(function (childSnapshot) {
-                    
                     var student = childSnapshot.val();
                     var studentName = student.name;
+                    var studentSession = student.session;
+                    
+                    //if (studentSession === GetParam.session) {
+                      // Remove Button
+                      $("#mainButton").remove();
                     
                     // Check if student already exist
-                    var existingStudent = false;
-                    $(".studentraised").each(function() {
-                      if ($(this).hasClass(studentName)) {
-                        existingStudent = true;
-                        return false;    
-                      }
-                    });
-                    
-                    if (!existingStudent) {
-                      // Retrieve info from student
-                      var userDetailsRef = studentRef.child(studentName);
-                      var studentObj;
+                      var existingStudent = false;
+                      $(".studentraised").each(function() {
+                        if ($(this).hasClass(studentName)) {
+                          existingStudent = true;
+                          return false;    
+                        }
+                      });
                       
-                      userDetailsRef.on('value', function(snapshot) {
-                        if(snapshot.val() == null) {
-                          // Do nothing, unlikely case
-                        }else{
-                          studentObj = snapshot.val();                     
-                          // Add new student element
-                          $('#pickRandomStudent').html('<div class="page-header" style="margin-top:0px">The students below wish to participate (please select):</div><button class="btn btn-default btn-sm btn-primary" type="submit" onclick="clearStudents()"><i class="fa fa-trash-o"></i> Clear List</button>');
-                          var studentHTML = "<div class='row well animated studentraised " + studentName + "' style='background-color:#" + (studentObj.todayCount>=3?(studentObj.todayCount>=5?"f2dede":"fcf8e3"):"dff0d8") + "; padding:5px'>"
-                          + "<a href='rewardpoints.html?student=" + studentName + "'><table valign=center width=100%><tr><td align=right style='font-size:0.8em;' class='col-xs-4'><img src='" + studentObj.photo + "' alt='#' style='max-width:80px; max-height:50px'/></div>"
-                          + "</td><td style='font-size:0.8em' class='col-xs-8'><strong>Name: </strong>" + studentObj.preferredName + "<br/>"
-                          + "<strong>Class Part Count: </strong><span class='label " + (studentObj.todayCount>=3?(studentObj.todayCount>=5?"label-danger":"label-warning"):"label-success") + "' style='font-size:1em; padding-top:0px; padding-bottom:2px'>" + studentObj.todayCount + "</span><br/>"
-                          + "<strong>Seat No.: </strong>" + studentObj.seatNumber + "<br/>"
-                          + "</td></tr></table></a></div>";         
-                          $(".col-lg-12").append(studentHTML);                        
-                          animateIn('.' + studentName, 'slideInLeft');
-                         }
-                       });                
-                     
-                    }                      
-                  });                
+                      if (!existingStudent) {
+                        // Retrieve info from student
+                        var userDetailsRef = studentRef.child(studentName);
+                        var studentObj;
+                        
+                        userDetailsRef.on('value', function(snapshot) {
+                          if(snapshot.val() == null) {
+                            // Do nothing, unlikely case
+                          }else{
+                            studentObj = snapshot.val();                     
+                            // Add new student element
+                            if($('#pickRandomStudent').find('#sortButton').length==0){
+                              $('#pickRandomStudent').html('<div class="page-header" style="margin-top:0px">The students below wish to participate (please select):</div><button class="btn btn-default btn-sm btn-primary" type="submit" onclick="clearStudents()"><i class="fa fa-trash-o"></i> Clear List</button>'
+                                                         + '<span>&nbsp&nbsp</span><button id="sortButton" class="btn btn-default btn-sm" onclick="sort()"><i class="fa fa-sort-numeric-asc "></i>&nbspSort by Participation</button>');
+                            }
+                            var studentHTML = "<div class='isotope-element row well animated studentraised " + studentName + "' style='background-color:#" + (studentObj.todayCount>=3?(studentObj.todayCount>=5?"f2dede":"fcf8e3"):"dff0d8") + "; padding:5px'>"
+                            + "<a href='rewardpoints.html?student=" + studentName + "'><table valign=center width=100%><tr><td align=right style='font-size:0.8em;' class='col-xs-4'><img src='" + studentObj.photo + "' alt='#' style='max-width:80px; max-height:50px'/></div>"
+                            + "</td><td style='font-size:0.8em' class='col-xs-8'><strong>Name: </strong>" + studentObj.preferredName + "<br/>"
+                            + "<strong>Class Part Count: </strong><span class='label number " + (studentObj.todayCount>=3?(studentObj.todayCount>=5?"label-danger":"label-warning"):"label-success") + "' style='font-size:1em; padding-top:0px; padding-bottom:2px'>" + studentObj.todayCount + "</span><br/>"
+                            + "<strong>Seat No.: </strong>" + studentObj.seatNumber + "<br/>"
+                            + "</td></tr></table></a></div>";         
+                            $(".col-lg-12").append(studentHTML);      
+                              animateIn('.' + studentName, 'slideInLeft');
+                          }
+                        });                
+                      }
+                    //}
+                  });
                 } else if (numIncomingElems < numExistingElems) {
                   // Case 2: Student stopped raising hand
                   $(".studentraised").addClass("old");                
@@ -130,7 +150,8 @@
                       }                 
                     }); // End each              
                   }); // End snapshot foreach     
-                  animateOut('.old', 'slideOutLeft');               
+                  
+                    animateOut('.old', 'slideOutLeft');      
                 }           
               }
             });
@@ -138,8 +159,11 @@
           
           function animateIn(element_ID, animation) {
             $(element_ID).addClass(animation);
+            
+              if($container!=null) $container.isotope('destroy');
+              refreshSort();
             var wait = window.setTimeout( function(){
-              $(element_ID).removeClass(animation)
+              $(element_ID).removeClass(animation);
             }, 1300);
 		      }        
           
@@ -149,7 +173,7 @@
               var rand = Math.floor(Math.random() * snapshot.numChildren());
               snapshot.forEach(function(snapshot1) {
                 if (i == rand) {
-                  document.location.href = "rewardpoints.html?student=" + snapshot1.name();
+                  document.location.href = "rewardpoints.html?student=" + snapshot1.name() + "&session=" + session;
                 }
                 i++;
               });
@@ -160,7 +184,9 @@
             $(element_ID).addClass(animation);           
             var wait = window.setTimeout( function(){
               $(element_ID).remove();
-            }, 1300);
+              if($container!=null) $container.isotope('destroy');
+              refreshSort();
+            }, 500);
 		      }         
           
           function createEndSession() {
@@ -180,6 +206,52 @@
             
             var unpickStudentRef = appRef.child('unpickstudent');
             unpickStudentRef.remove();
+          }
+          var $container = null;
+          
+          var sortByValue = "number";
+		  function sort() {
+			  // init isotope
+			  $container = $('.isotope-container').isotope({
+				itemSelector: '.isotope-element',
+				layoutMode: 'vertical',
+				vertical: {
+				  horizontalAlignment: 0.335,
+				},
+				getSortData: {
+				  number: '.number parseInt' 
+				}
+			  });
+			  
+			  // Change labels
+			  if (!$('#sortButton').hasClass('btn-success')) {
+          $('#sortButton').addClass('btn-success');
+          $container.isotope({sortBy: sortByValue, sortAscending: true});
+        } else {
+          $('#sortButton').removeClass('btn-success');
+          if($container!=null) $container.isotope('destroy');
+        }
+          
+		  } 
+          
+          function refreshSort(){     
+            
+            if ($('#sortButton').hasClass('btn-success')) {
+              
+              $container = $('.isotope-container').isotope({
+              itemSelector: '.isotope-element',
+              layoutMode: 'vertical',
+              vertical: {
+                horizontalAlignment: 0.335,
+              },
+              getSortData: {
+                number: '.number parseInt' 
+              }
+              });
+              $container.isotope({sortBy: sortByValue, sortAscending: true});
+            } else {
+              if($container!=null) $container.isotope('destroy');
+            }
           }
           
           

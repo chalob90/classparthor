@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ClassPartHor: Web Experiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://bootswatch.com/readable/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="http://bootswatch.com/assets/css/bootswatch.min.css">
+    <link rel="stylesheet" type="text/css" href="magnifier.css">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="noty/packaged/jquery.noty.packaged.min.js"></script>
+  </head>
+  <body>
+    <div class="container" id="instructions">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <h2 align="center">ClassPartHor - Usability Experiment</h2>
+          <hr/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <p>
+            In each of the following screens, you will be shown a <strong>photo of a classroom</strong> full of students,
+            and a <strong>phone application screen</strong> which indicates the position of a specific student in the photo.
+          </p>
+          <br/>
+          <p>
+            Your task is to:
+          </p>
+          <ul>
+            <li>
+              <strong>Locate the student indicated in the screen</strong>
+            </li>
+            <li>
+              <strong class="text-danger">Click on the indicated student's face</strong> in the photo.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-lg-12" >
+          <div class="well" style="max-height:240px; overflow:auto">
+          <small>
+            <h4 align="center">Additional Information and Consent Form:</h4>
+            <p>
+              <strong>Study Title: </strong>
+                Determine if the detailed seat map significantly improves the time taken to locate a student.
+            </p>
+            <p>
+              <strong>Description: </strong>
+                ClassPartHor is a mobile-responsive web application which aids a professor in SMU in the process of recording class participation credits.
+                You are invited to take part in an web experiment to study how effective is the detailed seat map (one of the features in the application) in helping a
+                professor locate a student after he is selected via the application.
+            </p>
+            <p>
+              <strong>Time Duration: </strong>
+                The experiment will take approximately 5 minutes to complete.
+            </p>
+            <p>
+              <strong>Risks & Benefits: </strong>
+                There are no foreseeable risks or discomforts to you participating in this experiment. There are no expected benefits to you participating in this experiment.
+            </p>
+            <p>
+              <strong>Confidentiality & Privacy: </strong>
+                The records of this experiment will be kept private and confidential. In any form of reports and data that we decide to make public will not include any information that will make it possible to identify you.
+            </p>
+            <p>
+              <strong>Voluntary Participation: </strong>
+                Taking part in this experiment is completely voluntary. If you have decided not to continue in the participation of the experiment, you are free to withdraw from this experiment at any time.
+            </p>
+            <p>
+              <strong>Other Information: </strong>
+                If you have any questions pertaining this study, kindly contact Geoffrey Goh at geoffreygoh.2011@sis.smu.edu.sg or 9789 6593.
+            </p>
+          </small>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <strong class="loading text-info">Pre-loading resources, please wait...</strong>
+          <div class="progress progress-striped active loading">
+            <div class="progress-bar" style="width: 100%"></div>
+          </div>
+          <button class="btn btn-primary btn-block" id="loaded" onclick="firstExperiment();" style="display:none">I give my consent. Let's begin!</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- THE FIRST EXPERIMENT -->
+    <!-- THE FIRST EXPERIMENT -->
+    <!-- THE FIRST EXPERIMENT -->
+    
+    <div id="firstExperiment" style="display:none">
+      <div class="row">
+        <div class="col-lg-12" id="photoPlaceHolder" style="padding:0px">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-5" style="text-align:center">
+          <br/>
+          <img src="appshot3.png"/>
+        </div>
+        <div class="col-lg-7">
+          <br/>
+          <div class="alert alert-success col-lg-10">
+            <h4 align="center">Instruction: On the photo above, <span class="text-danger">click</span> on the face of the student indicated in the app screen on the left:</h4>
+          </div>
+          <div class="col-lg-8">
+            <h4>Magnified Image:</h4>
+            <div id="previewOne" class="magnifier-preview" style="width:250px; height:250px; border: 3px #999 dashed">
+            </div>
+          </div>
+          
+          <div class="col-lg-4" style="display:none">
+            <h4>Timer:</h4>
+            <span id="timer"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="resultPlaceHolder" style="display:none">
+      <div class="col-lg-12" style="text-align:center">
+        <h2>You found the student! One more to go!</h2>
+        <p style="display:none"><strong>By the way, you took <span id="resultOne" class="text-info"></span> seconds to idenfy the right student.</strong></p>
+        <button class="btn btn-primary" id="loaded" onclick="secondExperiment();">Continue experiment</button>
+      </div>
+    </div>
+    
+    
+    
+    <!-- THE SECOND EXPERIMENT -->
+    <!-- THE SECOND EXPERIMENT -->
+    <!-- THE SECOND EXPERIMENT -->
+    
+    <div id="secondExperiment" style="display:none">
+      <div class="row">
+        <div class="col-lg-12" id="photoPlaceHolderTwo" style="padding:0px">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-5" style="text-align:center">
+          <br/>
+          <img src="appshot2.png"/>
+        </div>
+        <div class="col-lg-7">
+          <br/>
+          <div class="alert alert-success col-lg-10">
+            <h4 align="center">Instruction: On the photo above, <span class="text-danger">click</span> on the face of the student indicated in the app screen on the left:</h4>
+          </div>
+          <div class="col-lg-8">
+            <h4>Magnified Image:</h4>
+            <div id="previewTwo" class="magnifier-preview" style="width:250px; height:250px; border: 3px #999 dashed">
+            </div>
+          </div>
+          
+          <div class="col-lg-4" style="display:none">
+            <h4>Timer:</h4>
+            <span id="timer"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="resultPlaceHolderTwo" style="display:none">
+      <div class="col-lg-12">
+        <h2 align="center">You found the student! That's the end of the experiment!</h2>
+        <p align="center">Thank you for your participation!</p>
+        <p align="center" style="display:none"><strong>By the way, you took <span id="resultTwo" class="text-info"></span> seconds to idenfy the right student.</strong></p>
+      </div>
+    </div>    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script type="text/javascript" src="Event.js"></script>
+    <script type="text/javascript" src="Magnifier.js"></script>
+    <script>
+      var classPhoto = new Image();
+      classPhoto.src = 'classroom.png';
+      
+      var resultA;
+      var resultB;
+      
+      classPhoto.onload = function(){
+        $('body').append(classPhoto);
+        var newImg = new Image();
+        newImg.src = 'classthumb.png';
+        
+        newImg.onload = function(){
+          $(newImg).css('cursor', 'pointer');
+          var newImgOne = $(newImg).clone().prop("id", "horizonViewOne");
+          var newImgTwo = $(newImg).clone().prop("id", "horizonViewTwo");
+          
+          $('#photoPlaceHolder').append(newImgOne);
+          $('#photoPlaceHolderTwo').append(newImgTwo);
+          
+          $('.loading').hide();
+          $('#loaded').show();
+        }
+      }
+      var w = 1280;
+      var h = 1280;
+      var startTime;
+      var studentInBox = false;
+      var mouseInThumb = false;
+      
+      function displayTime(start){
+        var end = new Date();
+        $('#timer').html(((end - start)/1000).toFixed(3) + " seconds");
+      }
+      function firstExperiment(){
+        $('#instructions').hide();
+        $('#firstExperiment').show();
+        $('body').css('padding','0px');
+        $('body').css('margin-top',((7360/8640)*h*-1) + 'px');
+        //$('#photoPlaceHolder').append(newImg);
+        startTime = new Date();
+        var evt = new Event(),
+            m = new Magnifier(evt);
+        $(window).click(function(e){
+          if(mouseInThumb){
+            if(studentInBox) {
+              $('#firstExperiment').hide();
+              $('#resultPlaceHolder').show();
+              $('body').css('margin-top','50px');
+              resultA = Math.round(new Date() - startTime)/1000;
+              $('#resultOne').html( resultA );
+              $('ul').hide();
+              $(window).unbind('click');
+            }
+            else {
+              var n = noty({
+                text: 'Wrong student - try again!',
+                layout: 'bottom',
+                type: 'error',
+                killer: true,
+                animation: {
+                    open: {height: 'toggle'},
+                    close: {height: 'toggle'},
+                    easing: 'swing',
+                    speed: 500 // opening & closing animation speed
+                },
+                timeout: 3000, // delay for closing event. Set false for sticky notifications
+              });
+            }
+          }
+        });
+        
+        setInterval("displayTime(startTime)",10);
+            m.attach({
+                thumb: '#horizonViewOne',
+                large: classPhoto,
+                largeWrapper: 'previewOne',
+                zoom: (classPhoto.width*6/w),
+                          
+                onthumbenter: function (data) {
+                  mouseInThumb = true;
+                  studentInBox = ((data.x > 305) 
+                     && (data.x < 325)
+                     && (data.y > 11) 
+                     && (data.y < 31));
+                },
+                onthumbmove: function (data) {
+                  studentInBox = ((data.x > 305) 
+                     && (data.x < 325)
+                     && (data.y > 11) 
+                     && (data.y < 31));
+                },
+                onthumbleave: function (data) {
+                  mouseInThumb = false;
+                  studentInBox = ((data.x > 305) 
+                     && (data.x < 325)
+                     && (data.y > 11) 
+                     && (data.y < 31));
+                }
+            });
+      }
+      
+      function secondExperiment(){
+        $('#resultPlaceHolder').hide();
+        $('#instructions').hide();
+        $('#secondExperiment').show();
+        $('body').css('padding','0px');
+        $('body').css('margin-top',((7360/8640)*h*-1) + 'px');
+        //$('#photoPlaceHolder').append(newImg);
+        startTime = new Date();
+        var evt = new Event(),
+            m = new Magnifier(evt);
+        setTimeout("$('ul').hide()", 100);
+        $(window).click(function(e){
+          if(mouseInThumb){
+            if(studentInBox) {
+              $('#secondExperiment').hide();
+              $('#resultPlaceHolderTwo').show();
+              $('body').css('margin-top','50px');
+              resultB = Math.round(new Date() - startTime)/1000;
+              $('#resultTwo').html( resultB );
+              $('ul').hide();
+              
+              $.ajax({
+                url:'https://classparthor-rbduck.rhcloud.com/',
+                data: {
+                  aResult: resultB,
+                  bResult: resultA
+                },
+                success: function(data){
+                  console.log('Timings saved to DB');
+                },
+                error: function(data){
+                  console.log('An error occured');
+                }
+              });
+            }
+            else {
+              var n = noty({
+                text: 'Wrong student - try again!',
+                layout: 'bottom',
+                type: 'error',
+                killer: true,
+                animation: {
+                    open: {height: 'toggle'},
+                    close: {height: 'toggle'},
+                    easing: 'swing',
+                    speed: 500 // opening & closing animation speed
+                },
+                timeout: 3000, // delay for closing event. Set false for sticky notifications
+              });
+            }
+          }
+        });
+        
+        setInterval("displayTime(startTime)",10);
+            m.attach({
+                thumb: '#horizonViewTwo',
+                large: classPhoto,
+                largeWrapper: 'previewTwo',
+                zoom: (classPhoto.width*6/w),
+                          
+                onthumbenter: function (data) {
+                  mouseInThumb = true;
+                  studentInBox = ((data.x > 810) 
+                     && (data.x < 830)
+                     && (data.y > 40) 
+                     && (data.y < 60));
+                },
+                onthumbmove: function (data) {
+                  studentInBox = ((data.x > 810) 
+                     && (data.x < 830)
+                     && (data.y > 40) 
+                     && (data.y < 60));
+                },
+                onthumbleave: function (data) {
+                  mouseInThumb = false;
+                  studentInBox = ((data.x > 810) 
+                     && (data.x < 830)
+                     && (data.y > 40) 
+                     && (data.y < 60));
+                }
+            });
+      }
+      
+      
+    </script>
+    <script src="http://bootswatch.com/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="http://bootswatch.com/assets/js/bootswatch.js"></script>
+  </body>
+</html>

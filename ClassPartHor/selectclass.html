@@ -4,16 +4,16 @@
     <meta charset-"utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<title>Select Your Class</title>
-	<!-- Bootstrap core CSS 
-    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">-->
-
-    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet"/>
-    <!-- Custom styles for this template -->
-    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet"/>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+	<!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->  
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->  
+    <link href="font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet">
+    <!-- JQuery -->  
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <!-- Firebase -->
+    <script type='text/javascript' src='js/firebase.js'></script>
   </head>
   <body>
     
@@ -31,23 +31,28 @@
           <h4>Based on the current time, you should be at:</h4>
           <!-- start of current time supposed class -->
           <button type="button" id="currentclass" class="btn btn-default btn-md btn-block">
-            IS306 - Interaction Design and Prototyping (G2)
+            IS306 - IDP
+            <!-- IS306 - Interaction Design and Prototyping (G2) -->
           </button>
           <script>$('#currentclass').focus();</script>
           
 		      <br />
           <h4>Not your current class or session? Please select below:</h4>
           <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionAA()">
-            IS303 - Architectural Analysis
+            IS303 - AA
+            <!-- IS303 - Architectural Analysis -->
           </button>
           <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionEWS()">
-            IS305 - Enterprise Web Solutions
+            IS305 - EWS
+            <!-- IS305 - Enterprise Web Solutions -->
           </button>
           <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionIS480()">
-            IS480 - IS Application Project
+            IS480 - FYP
+            <!-- IS480 - IS Application Project -->
           </button>
           <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionIDP()">
-            IS306 - Interactive Design and Prototyping
+            IS434 - SA
+            <!-- IS306 - Interactive Design and Prototyping -->
           </button>   
         </div>
       </div>
@@ -59,7 +64,7 @@
       
       var user = GetParam.user;
       if (user === "jabezlee") {
-        $('#nextButton').prop('href', 'prof.html');
+        $('#nextButton').prop('href', 'selectsession.html?user=' + user + '&class=idp');
       } else {
         $('#nextButton').click(selectSessionIDP);
       }

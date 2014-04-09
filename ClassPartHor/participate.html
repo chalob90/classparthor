@@ -4,16 +4,23 @@
 	  <meta charset-"utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	  <title>Select Your Session</title>
-	  <!-- Bootstrap core CSS -->
-    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet">
+	 <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->  
+    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->  
+    <link href="font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet">
+    <!-- JQuery -->  
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <!-- Firebase -->
+    <script type='text/javascript' src='js/firebase.js'></script>    
+    <script src="js/jqueryui/jquery-ui.min.js"></script>
     
-    <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet"/>
-    <link href="http://elrumordelaluz.github.io/csshake/css/csshake.min.css" rel="stylesheet"/>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
-    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    
+     <link href="css/csshake.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap-editable.css" rel="stylesheet"/>  
+    <script src="js/bootstrap.js"></script> 
+    <script src="js/bootstrap-editable.min.js"></script>
     <script src="common.js"></script>
     <style>
       img { 
@@ -25,14 +32,22 @@
       td { 
         padding: 5px;
       }
-
+      input{
+        max-width:100px !important;
+      }
     </style>
+    
+    <script>
+      var session = GetParam.session;
+      var sessionArr = session.split("g");
+      var lesson = sessionArr[0];
+    </script>
     
   </head>
   <body>
     <div class="container">
       <a class="btn btn-sm btn-default pull-left" id="selectsessionbtn" href="selectclass.html"><i class="fa fa-undo"></i> Back to Select Session</a>  
-      <script>$('#selectsessionbtn').prop('href', 'selectsession.html?user=' + GetParam.user);</script>
+      <script>$('#selectsessionbtn').prop('href', 'selectsession.html?class=' + lesson + '&user=' + GetParam.user);</script>
       <a class="btn btn-sm btn-default pull-right" href="login.html"><i class="fa fa-sign-out"></i> Logout</a>
       <br/>
       <br/>
@@ -77,11 +92,36 @@
         }else{
           $('#studentphoto').html('<img src="' + snapshot.val().photo + '" style="max-width:70px">');
           $('#studentdetails').html('');
-          $('#studentdetails').append('<a id="preferredName">' + snapshot.val().preferredName + '</a><br/>');
-          $('#studentdetails').append('<a id="seatNum">' + snapshot.val().seatNumber + '</a><br/>');
+          $('#studentdetails').append('<a id="preferredName" href="javascript:void">' + snapshot.val().preferredName + ' <i class="fa fa-pencil"></i></a><br/>');
+          $('#studentdetails').append('<a id="seatNum" href="javascript:void">' + snapshot.val().seatNumber + ' <i class="fa fa-pencil"></i></a><br/>');
           $('#studentdetails').append(snapshot.val().semesterCount + ' this semester<br/>');
           $('#studentdetails').append(snapshot.val().todayCount + ' today<br/>');
           
+              $('#preferredName').editable({
+                placement: 'bottom',
+                  success: function(response, newValue) {
+                    userDetailsRef.update({preferredName: newValue}); //update backbone model
+                  }
+              });
+          $('#preferredName').click(function(e) {
+            $('.glyphicon-ok').addClass('fa');
+            $('.glyphicon-ok').addClass('fa-check');
+            $('.glyphicon-remove').addClass('fa');
+            $('.glyphicon-remove').addClass('fa-times');
+          });
+          $('#seatNum').editable({
+            placement: 'bottom',
+              success: function(response, newValue) {
+                userDetailsRef.update({seatNumber: newValue}); //update backbone model
+              }
+          });
+          
+          $('#seatNum').click(function(e) {
+            $('.glyphicon-ok').addClass('fa');
+            $('.glyphicon-ok').addClass('fa-check');
+            $('.glyphicon-remove').addClass('fa');
+            $('.glyphicon-remove').addClass('fa-times');
+          });
         }
       });
       
@@ -101,24 +141,24 @@
           // if have end session object
           buttonUp = new Image();
           buttonUp.src="images/buttonup.png";
-          buttonUp.style="max-width:50%";
+          buttonUp.style="max-width:30%";
           
           
           buttonDown = new Image();
           buttonDown.src="images/buttondown.png";
-          buttonDown.style="max-width:50%";
+          buttonDown.style="max-width:30%";
           
           userRef.on('value', function(snapshot) {
             if(snapshot.val() === null) {
               $('#mainButton').html(buttonUp);
-              $(buttonUp).css("max-width", "50%");
-              //$(buttonUp).css("max-height", "50%");
+              //$(buttonUp).css("max-width", "30%");
+              $(buttonUp).css("max-height", "40%");
               $('#mainText').html('Volunteer to participate by hitting the button above!');
               volunteering = false;
             }else{
               $('#mainButton').html(buttonDown);
-              $(buttonDown).css("max-width", "50%");
-              //$(buttonDown).css("max-height", "50%");
+              //$(buttonDown).css("max-width", "30%");
+              $(buttonDown).css("max-height", "40%");
               
               // check if prof picked student
               var pickStudentRef = appRef.child('pickstudent');
@@ -186,7 +226,8 @@
           var handRaiseObj = {};
           handRaiseObj[user] = {
             name: user,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            session: session
           };
           handRaiseRef.update(handRaiseObj);
         }else{
