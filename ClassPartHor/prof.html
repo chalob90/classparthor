@@ -229,7 +229,11 @@
           $container.isotope({sortBy: sortByValue, sortAscending: true});
         } else {
           $('#sortButton').removeClass('btn-success');
-          if($container!=null) $container.isotope('destroy');
+          if($container!=null) {
+            // Ian's code to animate on un-sort
+            $container.isotope({sortBy: 'original-order'});
+            $container.isotope('destroy');
+          }          
         }
           
 		  } 

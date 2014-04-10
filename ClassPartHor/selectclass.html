@@ -50,7 +50,7 @@
             IS480 - FYP
             <!-- IS480 - IS Application Project -->
           </button>
-          <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionIDP()">
+          <button type="button" class="btn btn-default btn-md btn-block" onclick="selectSessionSA()">
             IS434 - SA
             <!-- IS306 - Interactive Design and Prototyping -->
           </button>   
@@ -97,6 +97,10 @@
       
       function selectSessionIDP() {
           document.location.href='/selectsession.html?user=' + user + "&class=idp";
+      }
+      
+      function selectSessionSA() {
+          document.location.href='/selectsession.html?user=' + user + "&class=sa";
       }
       
     </script>
