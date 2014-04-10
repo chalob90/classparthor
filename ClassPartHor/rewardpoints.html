@@ -4,13 +4,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Reward Points Page</title>
 	<!-- Bootstrap core CSS -->
-    <link href="http://bootswatch.com/readable/bootstrap.css" rel="stylesheet">
-
+   <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- JQuery -->  
+    <script src="js/jquery-1.10.1.min.js"></script>
     <!-- Custom styles for this template -->
     <link href="bootstrap-3.1.1-dist/bootstrap-3.1.1-dist/css/signin.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+   <link href="font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet">
+     <script type='text/javascript' src='js/firebase.js'></script>   
+      <script src="js/jqueryui/jquery-ui.min.js"></script>
     <script src="common.js"></script>
   </head>
   <body>
@@ -18,7 +19,7 @@
 		<!-- Logout button start here -->
       <a class="btn btn-default btn-default pull-left btn-sm" id="volunteerlistbtn" onclick="unpickStudent()"><i class="fa fa-undo"></i> Volunteer List</a>
       <script>$('#volunteerlistbtn').prop('href', 'prof.html?session=' + GetParam.session);</script>
-      <a href="summaryofclass(endsession).html"><button class="btn btn-default btn-sm btn-warning pull-right" onclick="createEndSession()"><i class="fa fa-home"></i> End Session</button></a>   
+      <!--<a href="summaryofclass(endsession).html"><button class="btn btn-default btn-sm btn-warning pull-right" onclick="createEndSession()"><i class="fa fa-home"></i> End Session</button></a>-->    
       <br />
 		<!-- Logout button end here -->
       <div id="locationheader" style="margin-top:30px;"></div>
@@ -79,13 +80,13 @@
                     }
                   } else {
                     if (j > 2) {
-                      if (!(seat === null) && seat < 40 && seat > 30 && j === (seat - 28)) {
+                      if (!(seat === null) && seat < 40 && seat > 30 && j === (seat - 27)) {
                         $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:15px\"/></font>");
                       } else {
                         $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px;\" /></font>");
                       }
                     } else {
-                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
                   }
                 }
@@ -104,7 +105,7 @@
                       if (!(seat === null) && seat < 31 && seat > 22 && j === (seat - 22)) {
                          $('#seatdetails').append("<font style=\"font-size:1em\"><img src='" + photo + "' style=\"max-width:15px\"/></font>");
                       } else {
-                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='/images/seat.png' style=\"max-width:15px\"/></font>");
+                        $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px\"/></font>");
                       }
                     } else {
                       $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -148,7 +149,7 @@
                         $('#seatdetails').append("<font style=\"font-size:1em\"><img src='images/seat.png' style=\"max-width:15px;\" /></font>");
                       }
                     } else {
-                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;");
+                      $('#seatdetails').append("&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
                   }
                 }
